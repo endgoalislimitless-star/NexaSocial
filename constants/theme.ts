@@ -1,30 +1,74 @@
 import { Platform } from "react-native";
 
-const tintColorLight = "#007AFF";
-const tintColorDark = "#0A84FF";
+const nexaBlue = "#4361ee";
+const nexaCyan = "#4cc9f0";
+const nexaLightBlue = "#4895ef";
 
 export const Colors = {
   light: {
-    text: "#11181C",
+    text: "#212529",
+    textSecondary: "#6c757d",
     buttonText: "#FFFFFF",
-    tabIconDefault: "#687076",
-    tabIconSelected: tintColorLight,
-    link: "#007AFF",
-    backgroundRoot: "#FFFFFF", // Elevation 0
-    backgroundDefault: "#F2F2F2", // Elevation 1
-    backgroundSecondary: "#E6E6E6", // Elevation 2
-    backgroundTertiary: "#D9D9D9", // Elevation 3
+    tabIconDefault: "#6c757d",
+    tabIconSelected: nexaBlue,
+    link: nexaBlue,
+    primary: nexaBlue,
+    primaryGradientStart: nexaCyan,
+    primaryGradientEnd: nexaLightBlue,
+    error: "#dc3545",
+    success: "#28a745",
+    backgroundRoot: "#FFFFFF",
+    backgroundDefault: "#f8f9fa",
+    backgroundSecondary: "#e9ecef",
+    backgroundTertiary: "#dee2e6",
   },
   dark: {
-    text: "#ECEDEE",
+    text: "#f8f9fa",
+    textSecondary: "#6c757d",
     buttonText: "#FFFFFF",
-    tabIconDefault: "#9BA1A6",
-    tabIconSelected: tintColorDark,
-    link: "#0A84FF",
-    backgroundRoot: "#1F2123", // Elevation 0
-    backgroundDefault: "#2A2C2E", // Elevation 1
-    backgroundSecondary: "#353739", // Elevation 2
-    backgroundTertiary: "#404244", // Elevation 3
+    tabIconDefault: "#6c757d",
+    tabIconSelected: nexaCyan,
+    link: nexaCyan,
+    primary: nexaCyan,
+    primaryGradientStart: nexaCyan,
+    primaryGradientEnd: nexaLightBlue,
+    error: "#dc3545",
+    success: "#28a745",
+    backgroundRoot: "#0a0a0a",
+    backgroundDefault: "#1a1a1a",
+    backgroundSecondary: "#2a2a2a",
+    backgroundTertiary: "#3a3a3a",
+  },
+};
+
+export const Shadows = {
+  small: {
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  medium: {
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  large: {
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  fab: {
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 3,
   },
 };
 
@@ -56,37 +100,30 @@ export const BorderRadius = {
 export const Typography = {
   h1: {
     fontSize: 32,
-    lineHeight: 40,
     fontWeight: "700" as const,
   },
   h2: {
     fontSize: 28,
-    lineHeight: 36,
     fontWeight: "700" as const,
   },
   h3: {
     fontSize: 24,
-    lineHeight: 32,
     fontWeight: "600" as const,
   },
   h4: {
     fontSize: 20,
-    lineHeight: 28,
     fontWeight: "600" as const,
   },
   body: {
     fontSize: 16,
-    lineHeight: 24,
     fontWeight: "400" as const,
   },
   small: {
     fontSize: 14,
-    lineHeight: 20,
     fontWeight: "400" as const,
   },
-  link: {
-    fontSize: 16,
-    lineHeight: 24,
+  caption: {
+    fontSize: 12,
     fontWeight: "400" as const,
   },
 };

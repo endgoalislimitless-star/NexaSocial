@@ -2,13 +2,13 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import ProfileScreen from "@/screens/ProfileScreen";
-import CrashScreen from "@/screens/CrashScreen";
-import { useTheme } from "@/hooks/useTheme";
+import EditProfileScreen from "@/screens/EditProfileScreen";
 import { getCommonScreenOptions } from "@/navigation/screenOptions";
+import { useTheme } from "@/hooks/useTheme";
 
 export type ProfileStackParamList = {
   Profile: undefined;
-  Crash: undefined;
+  EditProfile: undefined;
 };
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
@@ -26,10 +26,10 @@ export default function ProfileStackNavigator() {
         }}
       />
       <Stack.Screen
-        name="Crash"
-        component={CrashScreen}
+        name="EditProfile"
+        component={EditProfileScreen}
         options={{
-          title: "Crash Test",
+          title: "Edit Profile",
         }}
       />
     </Stack.Navigator>

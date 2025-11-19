@@ -1,66 +1,55 @@
 import React, { useState, useCallback } from "react";
-import { StyleSheet, View, Pressable, Alert, Image } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { Feather } from "@expo/vector-icons";
+import { StyleSheet, View, Image } from "react-native";
+import { useFocusEffect, useRoute, useNavigation } from "@react-navigation/native";
 import { ThemedText } from "@/components/ThemedText";
 import { ScreenScrollView } from "@/components/ScreenScrollView";
 import { Avatar } from "@/components/Avatar";
-import { Button } from "@/components/Button";
 import { PostCard } from "@/components/PostCard";
 import { useAuth } from "@/contexts/AuthContext";
-import { useTheme } from "@/hooks/useTheme";
-import { getPosts, toggleLike, Post, addNotification } from "@/utils/storage";
+import { getPosts, toggleLike, getUserById, Post } from "@/utils/storage";
 import { Spacing } from "@/constants/theme";
 
-export default function ProfileScreen() {
+export default function UserProfileScreen() {
+  const route = useRoute();
   const navigation = useNavigation();
-  const { user, logout } = useAuth();
-  const { theme } = useTheme();
+  const { user: currentUser } = useAuth();
+  const { userId } = route.params as { userId: string };
+  const [user, setUser] = useState<any | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
 
-  const loadPosts = async () => {
-    if (!user) return;
+  const loadUserProfile = async () => {
+    const userData = await getUserById(userId);
+    setUser(userData);
+
     const allPosts = await getPosts();
-    const userPosts = allPosts.filter((p) => p.userId === user.id);
+    const userPosts = allPosts.filter((p) => p.userId === userId);
     setPosts(userPosts);
   };
 
   useFocusEffect(
     useCallback(() => {
-      loadPosts();
-    }, [user])
+      loadUserProfile();
+    }, [userId])
   );
 
-  const handleLogout = () => {
-    Alert.alert("Log Out", "Are you sure you want to log out?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Log Out",
-        style: "destructive",
-        onPress: async () => {
-          await logout();
-        },
-      },
-    ]);
-  };
-
   const handleLike = async (post: Post) => {
-    if (!user) return;
-    await toggleLike(post.id, user.id);
-    await loadPosts();
+    if (!currentUser) return;
+    await toggleLike(post.id, currentUser.id);
+    await loadUserProfile();
   };
 
-  if (!user) return null;
+  if (!user) {
+    return (
+      <View style={styles.emptyContainer}>
+        <ThemedText>User not found</ThemedText>
+      </View>
+    );
+  }
 
   return (
     <ScreenScrollView>
       <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <Avatar avatarIndex={user.avatarIndex} size={80} />
-          <Pressable style={styles.settingsButton} onPress={() => navigation.navigate("EditProfile" as never)}>
-            <Feather name="settings" size={24} color={theme.text} />
-          </Pressable>
-        </View>
+        <Avatar avatarIndex={user.avatarIndex} size={80} />
 
         <View style={styles.profileInfo}>
           <ThemedText style={styles.displayName}>{user.displayName}</ThemedText>
@@ -88,14 +77,12 @@ export default function ProfileScreen() {
             </ThemedText>
           </View>
         </View>
-
-        <Button onPress={handleLogout}>Log Out</Button>
       </View>
 
       <View style={styles.postsSection}>
-        <ThemedText style={styles.sectionTitle}>Your Posts</ThemedText>
+        <ThemedText style={styles.sectionTitle}>Posts</ThemedText>
         {posts.length === 0 ? (
-          <View style={styles.emptyContainer}>
+          <View style={styles.emptyPosts}>
             <Image
               source={require("../assets/placeholders/empty-state.png")}
               style={styles.emptyImage}
@@ -103,7 +90,7 @@ export default function ProfileScreen() {
             />
             <ThemedText style={styles.emptyTitle}>No posts yet</ThemedText>
             <ThemedText style={styles.emptySubtitle} lightColor="#6c757d" darkColor="#6c757d">
-              Share your first post with the world
+              This user hasn't shared anything yet
             </ThemedText>
           </View>
         ) : (
@@ -111,10 +98,11 @@ export default function ProfileScreen() {
             <PostCard
               key={post.id}
               post={post}
-              currentUserId={user.id}
+              currentUserId={currentUser?.id}
               onPress={() => navigation.navigate("PostDetail" as never, { postId: post.id } as never)}
               onLike={() => handleLike(post)}
               onComment={() => navigation.navigate("PostDetail" as never, { postId: post.id } as never)}
+              onUserPress={() => {}}
             />
           ))
         )}
@@ -124,20 +112,19 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   header: {
     padding: Spacing.lg,
     gap: Spacing.lg,
-  },
-  headerTop: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-  },
-  settingsButton: {
-    padding: Spacing.sm,
+    alignItems: "center",
   },
   profileInfo: {
     gap: Spacing.xs,
+    alignItems: "center",
   },
   displayName: {
     fontSize: 24,
@@ -149,6 +136,7 @@ const styles = StyleSheet.create({
   bio: {
     fontSize: 15,
     marginTop: Spacing.sm,
+    textAlign: "center",
   },
   stats: {
     flexDirection: "row",
@@ -174,7 +162,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
     paddingHorizontal: Spacing.lg,
   },
-  emptyContainer: {
+  emptyPosts: {
     alignItems: "center",
     paddingHorizontal: Spacing["2xl"],
     paddingVertical: Spacing["3xl"],
@@ -195,3 +183,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
